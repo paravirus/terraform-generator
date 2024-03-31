@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terraform Module Generator</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <h1>Terraform Module Generator</h1>
-
-    <label for="cloudProvider">Select Cloud Provider:</label>
-    <select id="cloudProvider">
-        <option value="AWS">AWS</option>
-        <option value="AZURE">AZURE</option>
-    </select>
-
-    <label for="resourceType">Select Resource Type:</label>
-    <select id="resourceType"></select>
-
-    <button id="fetchModuleButton">Fetch Module</button>
-
-    <textarea id="terraformCode" rows="10" cols="50" readonly></textarea>
-
-    <button id="copyButton">Copy to Clipboard</button>
+    <form id="cloudProviderForm">
+        <label for="cloudProvider">Select Cloud Provider:</label>
+        <select id="cloudProvider">
+            <option value="AWS">AWS</option>
+            <option value="AZURE">Azure</option>
+        </select>
+        <br><br>
+        <label for="resourceType">Select Resource Type:</label>
+        <select id="resourceType"></select>
+        <br><br>
+        <button type="submit">Fetch Module Code</button>
+    </form>
+    <br>
+    <div id="terraformModuleBox" style="display: none;">
+        <h2>Module Code</h2>
+        <textarea id="terraformCode" rows="10" cols="50" readonly></textarea>
+        <br><br>
+        <button id="copyButton">Copy Code</button>
+    </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
