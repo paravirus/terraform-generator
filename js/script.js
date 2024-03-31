@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return response.text();
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching module code:', error);
             throw new Error('Error fetching module code.');
         }
     };
@@ -56,11 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const cloudProvider = cloudProviderSelect.value;
         const resourceType = resourceTypeSelect.value;
         try {
+            console.log('Fetching module code...');
             const moduleCode = await fetchModuleCode(cloudProvider, resourceType);
+            console.log('Module code fetched:', moduleCode);
             displayModuleCode(moduleCode);
         } catch (error) {
-            console.error(error);
-            alert('Error fetching module code.');
+            console.error('Error generating module:', error);
+            alert('Error generating module. Please try again.');
         }
     });
 
