@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cloud provider to resource type mapping
     const resourceTypes = {
-        AWS: ['EC2', 'VPC'],
-        AZURE: ['VM']
+        AWS: ['EC2', 'VPC', 'EKS','S3'],
+        AZURE: ['VM', 'AKS', 'Network-Security-Group', 'postgresql']
     };
 
     // Function to populate resource type dropdown based on cloud provider selection
