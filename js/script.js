@@ -5,37 +5,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const terraformCodeTextarea = document.getElementById('terraformCode');
     const copyButton = document.getElementById('copyButton');
 
-    // Cloud provider to GitHub repository mapping
-    const repositories = {
-        AWS: 'https://api.github.com/repos/paravirus/terraform-poc/contents/terraform_modules/AWS',
-        Azure: 'https://api.github.com/repos/paravirus/terraform-poc/contents/terraform_modules/AZURE'
+    // Cloud provider to resource type mapping
+    const resourceTypes = {
+        AWS: ['EC2', 'VPC'],
+        AZURE: ['VM']
     };
 
     // Function to populate resource type dropdown based on cloud provider selection
-    const populateResourceTypes = async () => {
+    const populateResourceTypes = () => {
         const cloudProvider = cloudProviderSelect.value;
-        const repoURL = repositories[cloudProvider];
-        if (!repoURL) {
-            return;
-        }
-        try {
-            const response = await fetch(repoURL);
-            if (!response.ok) {
-                throw new Error('Error fetching resource types.');
-            }
-            const data = await response.json();
-            resourceTypeSelect.innerHTML = ''; // Clear previous options
-            data.forEach(item => {
-                if (item.type === 'dir') {
-                    const option = document.createElement('option');
-                    option.value = item.name;
-                    option.textContent = item.name.toUpperCase();
-                    resourceTypeSelect.appendChild(option);
-                }
-            });
-        } catch (error) {
-            console.error('Error:', error.message);
-        }
+        const types = resourceTypes[cloudProvider] || [];
+        resourceTypeSelect.innerHTML = '';
+        types.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type.toUpperCase();
+            resourceTypeSelect.appendChild(option);
+        });
     };
 
     // Event listener for cloud provider selection
@@ -51,12 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to fetch module code based on cloud provider and resource type
     const fetchModuleCode = async (cloudProvider, resourceType) => {
-        const response = await fetch(`https://raw.githubusercontent.com/paravirus/terraform-poc/main/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
+        const response = await fetch(`https://api.github.com/repos/paravirus/terraform-poc/contents/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
         if (!response.ok) {
             throw new Error('Error fetching module code.');
         }
-        const data = await response.text();
-        return data;
+        const data = await response.json();
+        return atob(data.content); // Decode base64 content
     };
 
     // Event listener for copy button
