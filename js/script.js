@@ -27,23 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial population of resource type dropdown
     populateResourceTypes();
 
-    // Handle form submission
-    const form = document.getElementById('cloudProviderForm');
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const cloudProvider = cloudProviderSelect.value;
-        const resourceType = resourceTypeSelect.value;
-        const moduleCode = await fetchModuleCode(cloudProvider, resourceType);
-        displayModuleCode(moduleCode);
-    });
-
     // Function to fetch module code based on cloud provider and resource type
     const fetchModuleCode = async (cloudProvider, resourceType) => {
-        const response = await fetch(`https://raw.githubusercontent.com/paravirus/terraform-poc/main/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
-        if (!response.ok) {
+        try {
+            const response = await fetch(`https://raw.githubusercontent.com/paravirus/terraform-poc/main/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
+            if (!response.ok) {
+                throw new Error('Error fetching module code.');
+            }
+            return response.text();
+        } catch (error) {
+            console.error(error);
             throw new Error('Error fetching module code.');
         }
-        return response.text();
     };
 
     // Function to display module code in the textarea
@@ -53,6 +48,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const terraformModuleBox = document.getElementById('terraformModuleBox');
         terraformModuleBox.style.display = 'block';
     };
+
+    // Handle form submission
+    const form = document.getElementById('cloudProviderForm');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent default form submission
+        const cloudProvider = cloudProviderSelect.value;
+        const resourceType = resourceTypeSelect.value;
+        try {
+            const moduleCode = await fetchModuleCode(cloudProvider, resourceType);
+            displayModuleCode(moduleCode);
+        } catch (error) {
+            console.error(error);
+            alert('Error fetching module code.');
+        }
+    });
 
     // Copy module code to clipboard
     const copyButton = document.getElementById('copyButton');
