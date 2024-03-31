@@ -1,10 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded');
     const cloudProviderSelect = document.getElementById('cloudProvider');
     const resourceTypeSelect = document.getElementById('resourceType');
-    const fetchModuleButton = document.getElementById('fetchModuleButton');
-    const terraformCodeTextarea = document.getElementById('terraformCode');
-    const copyButton = document.getElementById('copyButton');
 
     // Cloud provider to resource type mapping
     const resourceTypes = {
@@ -14,11 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to populate resource type dropdown based on cloud provider selection
     const populateResourceTypes = () => {
-        console.log('Populating resource types');
         const cloudProvider = cloudProviderSelect.value;
-        console.log('Selected cloud provider:', cloudProvider);
         const types = resourceTypes[cloudProvider] || [];
-        console.log('Available resource types:', types);
         resourceTypeSelect.innerHTML = '';
         types.forEach(type => {
             const option = document.createElement('option');
@@ -34,28 +27,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial population of resource type dropdown
     populateResourceTypes();
 
-    // Event listener for fetch module button
-    fetchModuleButton.addEventListener('click', async () => {
+    // Handle form submission
+    const form = document.getElementById('cloudProviderForm');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
         const cloudProvider = cloudProviderSelect.value;
         const resourceType = resourceTypeSelect.value;
-        console.log('Fetching module code for:', cloudProvider, resourceType);
         const moduleCode = await fetchModuleCode(cloudProvider, resourceType);
-        terraformCodeTextarea.value = moduleCode;
+        displayModuleCode(moduleCode);
     });
 
     // Function to fetch module code based on cloud provider and resource type
     const fetchModuleCode = async (cloudProvider, resourceType) => {
-        console.log('Fetching module code:', cloudProvider, resourceType);
-        const response = await fetch(`https://api.github.com/repos/paravirus/terraform-poc/contents/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
+        const response = await fetch(`/module?cloudProvider=${cloudProvider}&resourceType=${resourceType}`);
         if (!response.ok) {
             throw new Error('Error fetching module code.');
         }
-        const data = await response.json();
-        return atob(data.content); // Decode base64 content
+        return response.text();
     };
 
-    // Event listener for copy button
+    // Function to display module code in the textarea
+    const displayModuleCode = (moduleCode) => {
+        const terraformCodeTextarea = document.getElementById('terraformCode');
+        terraformCodeTextarea.value = moduleCode;
+        const terraformModuleBox = document.getElementById('terraformModuleBox');
+        terraformModuleBox.style.display = 'block';
+    };
+
+    // Copy module code to clipboard
+    const copyButton = document.getElementById('copyButton');
     copyButton.addEventListener('click', () => {
+        const terraformCodeTextarea = document.getElementById('terraformCode');
         terraformCodeTextarea.select();
         document.execCommand('copy');
         alert('Module code copied to clipboard!');

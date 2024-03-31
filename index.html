@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terraform Module Generator</title>
+    <title>Terraform Generator</title>
+    <link rel="icon" type="image/png" href="https://github.com/paravirus/terraform-poc/blob/main/terraform_modules/server/favicon.png?raw=true">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <h1>Terraform Module Generator</h1>
-    <form id="cloudProviderForm">
-        <label for="cloudProvider">Select Cloud Provider:</label>
-        <select id="cloudProvider">
-            <option value="AWS">AWS</option>
-            <option value="AZURE">AZURE</option>
-        </select>
-        <br><br>
-        <label for="resourceType">Select Resource Type:</label>
-        <select id="resourceType"></select>
-        <br><br>
-        <button type="submit">Fetch Module Code</button>
-    </form>
-    <br>
-    <div id="terraformModuleBox" style="display: none;">
-        <h2>Module Code</h2>
-        <textarea id="terraformCode" rows="10" cols="50" readonly></textarea>
-        <br><br>
-        <button id="copyButton">Copy Code</button>
+    <div class="container">
+        <h1 class="display-4 text-center mb-4">Terraform Generator</h1>
+        <form id="cloudProviderForm" class="mb-4">
+            <div class="form-group">
+                <label for="cloudProvider">Select Cloud Provider:</label>
+                <select id="cloudProvider" name="cloudProvider" class="form-control">
+                    <option value="AWS">AWS</option>
+                    <option value="AZURE">Azure</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="resourceType">Select Resource Type:</label>
+                <select id="resourceType" name="resourceType" class="form-control">
+                    <!-- Options will be populated dynamically via JavaScript -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Module</button>
+        </form>
+        <div id="terraformModuleBox" class="module-box mb-4" style="display: none;">
+            <h2>Generated Terraform Module:</h2>
+            <textarea id="terraformCode" rows="10" class="form-control"></textarea>
+            <button id="copyButton" class="btn btn-success mt-3">Copy Module Code</button>
+        </div>
     </div>
+
+    <footer class="text-center mt-4">
+        <p>Created by <strong>Moe Bin-Alsheikh</strong></p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
-
 </html>
