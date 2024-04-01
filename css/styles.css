@@ -33,32 +33,32 @@ body {
 }
 
 .btn-primary {
-    background-color: #f84c69; /* Vivid red */
+    background-color: #f84c69; 
     border-color: #f84c69;
     color: #fff;
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #ff758c; /* Lighter shade on hover */
+    background-color: #ff758c; 
     border-color: #ff758c;
 }
 
 .btn-success {
-    background-color: #34d058; /* Vivid green */
+    background-color: #34d058; 
     border-color: #34d058;
     color: #fff;
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-success:hover {
-    background-color: #6aff87; /* Lighter shade on hover */
+    background-color: #6aff87; 
     border-color: #6aff87;
 }
 
 .copy-button {
     padding: 10px;
-    background-color: #1fb36f; /* Green */
+    background-color: #1fb36f; 
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -67,5 +67,5 @@ body {
 }
 
 .copy-button:hover {
-    background-color: #30db87; /* Lighter shade on hover */
+    background-color: #30db87; 
 }
