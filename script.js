@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const cloudProviderSelect = document.getElementById('cloudProvider');
     const resourceTypeSelect = document.getElementById('resourceType');
 
-    // Cloud provider to resource type mapping
+
     const resourceTypes = {
         AWS: ['EC2', 'VPC', 'EKS','S3'],
         AZURE: ['VM', 'AKS', 'Network-Security-Group', 'postgresql']
     };
 
-    // Function to populate resource type dropdown based on cloud provider selection
+
     const populateResourceTypes = () => {
         const cloudProvider = cloudProviderSelect.value;
         const types = resourceTypes[cloudProvider] || [];
@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Event listener for cloud provider selection
+
     cloudProviderSelect.addEventListener('change', populateResourceTypes);
 
-    // Initial population of resource type dropdown
+
     populateResourceTypes();
 
-    // Function to fetch module code based on cloud provider and resource type
+
     const fetchModuleCode = async (cloudProvider, resourceType) => {
         try {
             const response = await fetch(`https://raw.githubusercontent.com/paravirus/terraform-poc/main/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Function to display module code in the textarea
+
     const displayModuleCode = (moduleCode) => {
         const terraformCodeTextarea = document.getElementById('terraformCode');
         terraformCodeTextarea.value = moduleCode;
@@ -49,10 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         terraformModuleBox.style.display = 'block';
     };
 
-    // Handle form submission
+
     const form = document.getElementById('cloudProviderForm');
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault(); 
         const cloudProvider = cloudProviderSelect.value;
         const resourceType = resourceTypeSelect.value;
         try {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Copy module code to clipboard
+    
     const copyButton = document.getElementById('copyButton');
     copyButton.addEventListener('click', () => {
         const terraformCodeTextarea = document.getElementById('terraformCode');
