@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cloudProviderSelect = document.getElementById('cloudProvider');
     const resourceTypeSelect = document.getElementById('resourceType');
-
+    const complianceTypeSelect = document.getElementById('complianceType');
 
     const resourceTypes = {
         AWS: ['EC2', 'VPC', 'EKS','S3'],
         AZURE: ['VM', 'AKS', 'Network-Security-Group', 'postgresql']
     };
-
 
     const populateResourceTypes = () => {
         const cloudProvider = cloudProviderSelect.value;
@@ -21,16 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-
     cloudProviderSelect.addEventListener('change', populateResourceTypes);
-
 
     populateResourceTypes();
 
-
-    const fetchModuleCode = async (cloudProvider, resourceType) => {
+    const fetchModuleCode = async (cloudProvider, resourceType, complianceType) => {
         try {
-            const response = await fetch(`https://raw.githubusercontent.com/paravirus/terraform-poc/main/terraform_modules/${cloudProvider}/${resourceType}/${resourceType}.tf`);
+            let moduleType = '';
+            if (complianceType === 'NIST') {
+                moduleType = `/${resourceType}/${complianceType}/${resourceType}.tf`;
+            } else {
+                moduleType = `/${resourceType}/${resourceType}.tf`;
+            }
+            const response = await fetch(`https://raw.githubusercontent.com/paravirus/terraform-poc/main/terraform_modules/${cloudProvider}${moduleType}`);
             if (!response.ok) {
                 throw new Error('Error fetching module code.');
             }
@@ -41,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-
     const displayModuleCode = (moduleCode) => {
         const terraformCodeTextarea = document.getElementById('terraformCode');
         terraformCodeTextarea.value = moduleCode;
@@ -49,15 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
         terraformModuleBox.style.display = 'block';
     };
 
-
     const form = document.getElementById('cloudProviderForm');
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         const cloudProvider = cloudProviderSelect.value;
         const resourceType = resourceTypeSelect.value;
+        const complianceType = complianceTypeSelect.value;
         try {
             console.log('Fetching module code...');
-            const moduleCode = await fetchModuleCode(cloudProvider, resourceType);
+            const moduleCode = await fetchModuleCode(cloudProvider, resourceType, complianceType);
             console.log('Module code fetched:', moduleCode);
             displayModuleCode(moduleCode);
         } catch (error) {
@@ -66,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    
     const copyButton = document.getElementById('copyButton');
     copyButton.addEventListener('click', () => {
         const terraformCodeTextarea = document.getElementById('terraformCode');
