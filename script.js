@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const cloudProviderSelect = document.getElementById('cloudProvider');
     const resourceTypeSelect = document.getElementById('resourceType');
     const complianceTypeSelect = document.getElementById('complianceType');
+    const downloadButton = document.getElementById('downloadButton');
+    const terraformCodeTextarea = document.getElementById('terraformCode');
+    const terraformModuleBox = document.getElementById('terraformModuleBox');
 
     const resourceTypes = {
         AWS: ['EC2', 'VPC', 'EKS','S3'],
@@ -18,9 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
             option.textContent = type.toUpperCase();
             resourceTypeSelect.appendChild(option);
         });
+        clearGeneratedCode(); // Clear generated code when changing cloud provider
     };
 
-    cloudProviderSelect.addEventListener('change', populateResourceTypes);
+    const clearGeneratedCode = () => {
+        terraformCodeTextarea.value = '';
+        terraformModuleBox.style.display = 'none';
+        downloadButton.style.display = 'none';
+    };
+
+    cloudProviderSelect.addEventListener('change', () => {
+        populateResourceTypes();
+    });
+
+    complianceTypeSelect.addEventListener('change', () => {
+        clearGeneratedCode(); // Clear generated code when changing compliance type
+    });
 
     populateResourceTypes();
 
@@ -44,10 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const displayModuleCode = (moduleCode) => {
-        const terraformCodeTextarea = document.getElementById('terraformCode');
         terraformCodeTextarea.value = moduleCode;
-        const terraformModuleBox = document.getElementById('terraformModuleBox');
         terraformModuleBox.style.display = 'block';
+        downloadButton.style.display = 'block';
     };
 
     const form = document.getElementById('cloudProviderForm');
@@ -69,9 +84,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const copyButton = document.getElementById('copyButton');
     copyButton.addEventListener('click', () => {
-        const terraformCodeTextarea = document.getElementById('terraformCode');
         terraformCodeTextarea.select();
         document.execCommand('copy');
         alert('Module code copied to clipboard!');
     });
+
+    downloadButton.addEventListener('click', () => {
+        const moduleName = resourceTypeSelect.value.toUpperCase();
+        const complianceStandard = complianceTypeSelect.value.toUpperCase();
+        const fileName = `${moduleName}-${complianceStandard}.tfvars`;
+        const content = terraformCodeTextarea.value;
+        downloadFile(fileName, content);
+    });
+
+    const downloadFile = (filename, content) => {
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
 });
