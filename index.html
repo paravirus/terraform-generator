@@ -25,6 +25,13 @@
                     <!-- Options will be populated dynamically via JavaScript -->
                 </select>
             </div>
+            <div class="form-group">
+                <label for="complianceType">Select Compliance Type:</label>
+                <select id="complianceType" name="complianceType" class="form-control">
+                    <option value="Standard">Standard</option>
+                    <option value="NIST">NIST</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Generate Module</button>
         </form>
         <div id="terraformModuleBox" class="module-box mb-4" style="display: none;">
